@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <AssemblyName>Jellyfin.Plugin.VirtualChannels</AssemblyName>
+    <RootNamespace>Jellyfin.Plugin.VirtualChannels</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Jellyfin.Controller" Version="10.10.7" />
+    <PackageReference Include="Jellyfin.Model" Version="10.10.7" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+  </ItemGroup>
+
+  <!-- Embed configuration web files -->
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\Web\configPage.html" />
+    <EmbeddedResource Include="Configuration\Web\configPage.js" />
+  </ItemGroup>
+
+  <!-- Copy to output for easier distribution -->
+  <ItemGroup>
+    <None Update="Configuration\Web\*.html;Configuration\Web\*.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

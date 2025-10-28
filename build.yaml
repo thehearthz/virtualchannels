@@ -1,0 +1,30 @@
+---
+name: "Virtual Channels"
+guid: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+version: "1.0.0.0"
+targetAbi: "10.10.7.0"
+framework: "net8.0"
+overview: "Create virtual cable channels from your Jellyfin library"
+description: >
+  Virtual Channels plugin creates live TV channels that play content from your
+  existing Jellyfin media library with commercial insertion, custom scheduling,
+  and automatic genre-based channel generation. Integrates with Jellyfin's
+  native Live TV feature for a seamless cable TV experience.
+category: "Live TV"
+owner: "jellyfin-virtualchannels"
+artifacts:
+  - "Jellyfin.Plugin.VirtualChannels.dll"
+changelog: >
+  Version 1.0.0:
+  - Initial release
+  - Virtual channel creation and management
+  - Commercial insertion with configurable intervals
+  - Genre-based automatic channel generation
+  - Year-based automatic channel generation
+  - Time-based programming and scheduling
+  - Episode order support with shuffle option
+  - Pre-roll support
+  - Live TV integration
+  - EPG (XMLTV) generation
+  - Hardware acceleration support
+  - M3U playlist generation

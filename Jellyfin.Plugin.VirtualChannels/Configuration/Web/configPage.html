@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Virtual Channels Configuration</title>
+</head>
+<body>
+    <div id="VirtualChannelsConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-select,emby-checkbox">
+        <div data-role="content">
+            <div class="content-primary">
+                <h2>Virtual Channels Configuration</h2>
+                
+                <form id="VirtualChannelsConfigForm">
+                    <!-- Global Settings -->
+                    <div class="verticalSection">
+                        <h3 class="sectionTitle">Global Settings</h3>
+                        
+                        <div class="inputContainer">
+                            <label class="inputLabel" for="CommercialFolderPath">Commercial Folder Path:</label>
+                            <input is="emby-input" type="text" id="CommercialFolderPath" name="CommercialFolderPath" />
+                            <div class="fieldDescription">
+                                Path to folder containing commercial/bumper videos (e.g., /media/commercials)
+                            </div>
+                        </div>
+                        
+                        <div class="inputContainer">
+                            <label class="inputLabel" for="DefaultCommercialInterval">Default Commercial Interval (seconds):</label>
+                            <input is="emby-input" type="number" id="DefaultCommercialInterval" name="DefaultCommercialInterval" value="900" min="60" step="60" />
+                            <div class="fieldDescription">
+                                Default interval between commercial breaks (900 = 15 minutes)
+                            </div>
+                        </div>
+                        
+                        <div class="inputContainer">
+                            <label class="inputLabel" for="BaseChannelNumber">Base Channel Number:</label>
+                            <input is="emby-input" type="number" id="BaseChannelNumber" name="BaseChannelNumber" value="1000" min="1" />
+                            <div class="fieldDescription">
+                                Starting channel number for virtual channels
+                            </div>
+                        </div>
+                        
+                        <div class="inputContainer">
+                            <label class="inputLabel" for="StreamingPort">Streaming Port:</label>
+                            <input is="emby-input" type="number" id="StreamingPort" name="StreamingPort" value="8097" min="1024" max="65535" />
+                            <div class="fieldDescription">
+                                Port for HLS streaming (default: 8097)
+                            </div>
+                        </div>
+                        
+                        <div class="inputContainer">
+                            <label class="inputLabel" for="EpgDaysAhead">EPG Days Ahead:</label>
+                            <input is="emby-input" type="number" id="EpgDaysAhead" name="EpgDaysAhead" value="3" min="1" max="14" />
+                            <div class="fieldDescription">
+                                Number of days to generate EPG data for
+                            </div>
+                        </div>
+                        
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input is="emby-checkbox" type="checkbox" id="EnableHardwareAcceleration" />
+                                <span>Enable Hardware Acceleration (FFmpeg)</span>
+                            </label>
+                        </div>
+                        
+                        <div class="selectContainer">
+                            <label class="inputLabel" for="TranscodingPreset">FFmpeg Transcoding Preset:</label>
+                            <select is="emby-select" id="TranscodingPreset" name="TranscodingPreset">
+                                <option value="ultrafast">Ultra Fast (lowest quality)</option>
+                                <option value="superfast">Super Fast</option>
+                                <option value="veryfast" selected>Very Fast (recommended)</option>
+                                <option value="faster">Faster</option>
+                                <option value="fast">Fast</option>
+                                <option value="medium">Medium (highest quality, slowest)</option>
+                            </select>
+                            <div class="fieldDescription">
+                                Balance between encoding speed and quality
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Auto Channel Generation -->
+                    <div class="verticalSection">
+                        <h3 class="sectionTitle">Automatic Channel Generation</h3>
+                        
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input is="emby-checkbox" type="checkbox" id="EnableAutoChannelGeneration" />
+                                <span>Enable Automatic Channel Generation</span>
+                            </label>
+                        </div>
+                        
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input is="emby-checkbox" type="checkbox" id="AutoGenerateGenreChannels" />
+                                <span>Auto-Generate Genre-Based Channels</span>
+                            </label>
+                        </div>
+                        
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input is="emby-checkbox" type="checkbox" id="AutoGenerateYearChannels" />
+                                <span>Auto-Generate Year/Decade-Based Channels</span>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <button is="emby-button" type="button" id="generateAutoChannels" class="raised button-submit">
+                                <span>Generate Auto Channels Now</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Manual Channels -->
+                    <div class="verticalSection">
+                        <h3 class="sectionTitle">Custom Channels</h3>
+                        <div id="channelList" class="paperList"></div>
+                        <div style="margin-top: 1em;">
+                            <button is="emby-button" type="button" id="addChannel" class="raised button-submit">
+                                <span>Add Custom Channel</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="verticalSection">
+                        <button is="emby-button" type="submit" class="raised button-submit block">
+                            <span>Save Configuration</span>
+                        </button>
+                        
+                        <button is="emby-button" type="button" id="refreshChannels" class="raised block" style="margin-top: 0.5em;">
+                            <span>Refresh All Channels</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="configPage.js"></script>
+</body>
+</html>
