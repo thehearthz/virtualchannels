@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Jellyfin.Data.Enums;
 using Jellyfin.Plugin.VirtualChannels.Configuration;
 using MediaBrowser.Controller.Library;
-using MediaBrowser.Model.Querying;
+using MediaBrowser.Controller.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.VirtualChannels.Services
@@ -135,14 +135,13 @@ namespace Jellyfin.Plugin.VirtualChannels.Services
             var query = new InternalItemsQuery
             {
                 Recursive = true,
-                IncludeItemTypes = new[] { BaseItemKind.Movie },
-                HasAnyProviderId = new Dictionary<string, string>()
+                IncludeItemTypes = new[] { BaseItemKind.Movie }
             };
 
             var items = _libraryManager.GetItemList(query);
             var years = items
                 .Where(i => i.ProductionYear.HasValue)
-                .Select(i => i.ProductionYear.Value)
+                .Select(i => i.ProductionYear!.Value)
                 .Distinct()
                 .OrderByDescending(y => y)
                 .ToList();

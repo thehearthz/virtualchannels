@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Jellyfin.Data.Enums;
 using Jellyfin.Plugin.VirtualChannels.Services;
+using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Library;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -193,10 +196,10 @@ namespace Jellyfin.Plugin.VirtualChannels.Api
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetGenres()
         {
-            var query = new MediaBrowser.Model.Querying.InternalItemsQuery
+            var query = new InternalItemsQuery
             {
                 Recursive = true,
-                IncludeItemTypes = new[] { Jellyfin.Data.Enums.BaseItemKind.Movie, Jellyfin.Data.Enums.BaseItemKind.Episode }
+                IncludeItemTypes = new[] { BaseItemKind.Movie, BaseItemKind.Episode }
             };
 
             var items = _libraryManager.GetItemList(query);

@@ -101,8 +101,7 @@ namespace Jellyfin.Plugin.VirtualChannels.Services
             var query = new InternalItemsQuery
             {
                 Recursive = true,
-                IsVirtualItem = false,
-                HasPath = true
+                IsVirtualItem = false
             };
 
             // Apply filters based on channel type

@@ -13,7 +13,7 @@ namespace Jellyfin.Plugin.VirtualChannels
     public class PluginServiceRegistrator : IPluginServiceRegistrator
     {
         /// <inheritdoc />
-        public void RegisterServices(IServiceCollection serviceCollection)
+        public void RegisterServices(IServiceCollection serviceCollection, IServerApplicationHost applicationHost)
         {
             // Register core services as singletons
             serviceCollection.AddSingleton<ChannelScheduler>();

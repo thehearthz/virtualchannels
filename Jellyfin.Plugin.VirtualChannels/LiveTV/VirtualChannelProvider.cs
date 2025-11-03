@@ -7,6 +7,7 @@ using Jellyfin.Plugin.VirtualChannels.Services;
 using MediaBrowser.Controller.LiveTv;
 using MediaBrowser.Model.Dto;
 using MediaBrowser.Model.LiveTv;
+using MediaBrowser.Model.MediaInfo;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.VirtualChannels.LiveTV
@@ -94,13 +95,6 @@ namespace Jellyfin.Plugin.VirtualChannels.LiveTV
                 return Enumerable.Empty<ProgramInfo>();
             }
 
-            // Get EPG data
-            var xmltv = await _epgGenerator.GenerateXmltvGuide(
-                new List<Configuration.VirtualChannelConfig> { channel },
-                startDateUtc,
-                endDateUtc,
-                cancellationToken);
-
             // For now, return a continuous program
             // In a full implementation, parse the XMLTV and return proper programs
             var programs = new List<ProgramInfo>
@@ -120,9 +114,7 @@ namespace Jellyfin.Plugin.VirtualChannels.LiveTV
         }
 
         /// <inheritdoc />
-        public async Task<List<MediaSourceInfo>> GetChannelStreamMediaSources(
-            string channelId,
-            CancellationToken cancellationToken)
+        public Task<MediaSourceInfo> GetChannelStream(string channelId, string streamId, CancellationToken cancellationToken)
         {
             var config = Plugin.Instance?.Configuration;
             var channelNumber = channelId.Replace("virtual_", string.Empty);
@@ -143,6 +135,15 @@ namespace Jellyfin.Plugin.VirtualChannels.LiveTV
                 IsRemote = false
             };
 
+            return Task.FromResult(mediaSource);
+        }
+
+        /// <inheritdoc />
+        public async Task<List<MediaSourceInfo>> GetChannelStreamMediaSources(
+            string channelId,
+            CancellationToken cancellationToken)
+        {
+            var mediaSource = await GetChannelStream(channelId, string.Empty, cancellationToken);
             return new List<MediaSourceInfo> { mediaSource };
         }
 
@@ -154,9 +155,9 @@ namespace Jellyfin.Plugin.VirtualChannels.LiveTV
         }
 
         /// <inheritdoc />
-        public Task<string> CreateTimer(TimerInfo info, CancellationToken cancellationToken)
+        public Task CreateTimerAsync(TimerInfo info, CancellationToken cancellationToken)
         {
-            return Task.FromResult(string.Empty);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
@@ -172,9 +173,9 @@ namespace Jellyfin.Plugin.VirtualChannels.LiveTV
         }
 
         /// <inheritdoc />
-        public Task<string> CreateSeriesTimer(SeriesTimerInfo info, CancellationToken cancellationToken)
+        public Task CreateSeriesTimerAsync(SeriesTimerInfo info, CancellationToken cancellationToken)
         {
-            return Task.FromResult(string.Empty);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
@@ -216,32 +217,11 @@ namespace Jellyfin.Plugin.VirtualChannels.LiveTV
         }
 
         /// <inheritdoc />
-        public Task<ImageStream?> GetChannelImageAsync(string channelId, CancellationToken cancellationToken)
-        {
-            return Task.FromResult<ImageStream?>(null);
-        }
-
-        /// <inheritdoc />
-        public Task<ImageStream?> GetProgramImageAsync(
-            string programId,
-            string channelId,
-            CancellationToken cancellationToken)
-        {
-            return Task.FromResult<ImageStream?>(null);
-        }
-
-        /// <inheritdoc />
         public Task<List<MediaSourceInfo>> GetRecordingStreamMediaSources(
             string recordingId,
             CancellationToken cancellationToken)
         {
             return Task.FromResult(new List<MediaSourceInfo>());
-        }
-
-        /// <inheritdoc />
-        public Task<IEnumerable<RecordingInfo>> GetRecordingsAsync(CancellationToken cancellationToken)
-        {
-            return Task.FromResult(Enumerable.Empty<RecordingInfo>());
         }
 
         /// <inheritdoc />
