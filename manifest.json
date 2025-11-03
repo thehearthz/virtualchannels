@@ -12,7 +12,7 @@
                 "version": "1.0.0.0",
                 "changelog": "Initial release with virtual channel support, commercial insertion, genre-based auto-generation, and Live TV integration",
                 "targetAbi": "10.10.7.0",
-                "sourceUrl": "https://github.com/thehearthz/virtualchannels/releases/download/v1.0.0/virtualchannels-v1.0.0.zip",
+                "sourceUrl": "https://github.com/yourusername/jellyfin-plugin-virtualchannels/releases/download/v1.0.0/jellyfin-plugin-virtualchannels-v1.0.0.zip",
                 "checksum": "GENERATE_CHECKSUM_AFTER_BUILD",
                 "timestamp": "2025-10-28T00:00:00Z"
             }

@@ -1,0 +1,756 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Jellyfin.Plugin.VirtualChannels</name>
+    </assembly>
+    <members>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Api.VirtualChannelsController">
+            <summary>
+            API controller for virtual channels.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Api.VirtualChannelsController.#ctor(Jellyfin.Plugin.VirtualChannels.Services.EpgGenerator,Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler,Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager,Jellyfin.Plugin.VirtualChannels.Services.AutoChannelGenerator,MediaBrowser.Controller.Library.ILibraryManager)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.VirtualChannels.Api.VirtualChannelsController"/> class.
+            </summary>
+            <param name="epgGenerator">The EPG generator.</param>
+            <param name="scheduler">The channel scheduler.</param>
+            <param name="stateManager">The state manager.</param>
+            <param name="autoChannelGenerator">The auto channel generator.</param>
+            <param name="libraryManager">The library manager.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Api.VirtualChannelsController.GetXmltvGuide(System.Threading.CancellationToken)">
+            <summary>
+            Gets the XMLTV EPG data.
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>XMLTV formatted EPG data.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Api.VirtualChannelsController.GetM3uPlaylist(System.Int32)">
+            <summary>
+            Gets an M3U playlist for a specific channel.
+            </summary>
+            <param name="channelNumber">The channel number.</param>
+            <returns>M3U playlist.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Api.VirtualChannelsController.GetMasterPlaylist">
+            <summary>
+            Gets a master M3U playlist for all channels.
+            </summary>
+            <returns>M3U playlist with all channels.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Api.VirtualChannelsController.RefreshChannels(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Refreshes channel queues.
+            </summary>
+            <param name="channelId">Optional channel ID to refresh. If null, refreshes all.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Action result.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Api.VirtualChannelsController.GetStatistics">
+            <summary>
+            Gets channel statistics.
+            </summary>
+            <returns>Statistics data.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Api.VirtualChannelsController.GenerateAutoChannels(System.Threading.CancellationToken)">
+            <summary>
+            Generates auto channels.
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Action result.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Api.VirtualChannelsController.GetGenres">
+            <summary>
+            Gets available genres for channel creation.
+            </summary>
+            <returns>List of genres.</returns>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration">
+            <summary>
+            Plugin configuration.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration"/> class.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration.Channels">
+            <summary>
+            Gets or sets the list of configured virtual channels.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration.CommercialFolderPath">
+            <summary>
+            Gets or sets the folder path containing commercial videos.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration.EnableHardwareAcceleration">
+            <summary>
+            Gets or sets a value indicating whether hardware acceleration is enabled.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration.TranscodingPreset">
+            <summary>
+            Gets or sets the FFmpeg transcoding preset.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration.DefaultCommercialInterval">
+            <summary>
+            Gets or sets the default commercial interval in seconds.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration.BaseChannelNumber">
+            <summary>
+            Gets or sets the base channel number for virtual channels.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration.EnableAutoChannelGeneration">
+            <summary>
+            Gets or sets a value indicating whether automatic channel generation is enabled.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration.AutoGenerateGenreChannels">
+            <summary>
+            Gets or sets a value indicating whether to auto-generate genre-based channels.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration.AutoGenerateYearChannels">
+            <summary>
+            Gets or sets a value indicating whether to auto-generate year-based channels.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration.EpgDaysAhead">
+            <summary>
+            Gets or sets the EPG days ahead to generate.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.PluginConfiguration.StreamingPort">
+            <summary>
+            Gets or sets the streaming port.
+            </summary>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig">
+            <summary>
+            Configuration for a virtual channel.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig"/> class.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig.Id">
+            <summary>
+            Gets or sets the unique identifier for the channel.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig.Name">
+            <summary>
+            Gets or sets the channel name.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig.ChannelNumber">
+            <summary>
+            Gets or sets the channel number.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig.Type">
+            <summary>
+            Gets or sets the channel type (Custom, Genre, Year, Series).
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig.ContentFilters">
+            <summary>
+            Gets or sets the content filters (genres, years, series IDs, tags).
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig.ShuffleMode">
+            <summary>
+            Gets or sets a value indicating whether shuffle mode is enabled.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig.RespectEpisodeOrder">
+            <summary>
+            Gets or sets a value indicating whether to respect episode order.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig.CommercialIntervalSeconds">
+            <summary>
+            Gets or sets the commercial interval in seconds.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig.EnablePreRolls">
+            <summary>
+            Gets or sets a value indicating whether pre-rolls are enabled.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig.LogoPath">
+            <summary>
+            Gets or sets the channel logo path/URL.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig.Enabled">
+            <summary>
+            Gets or sets a value indicating whether the channel is enabled.
+            </summary>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider">
+            <summary>
+            Live TV service provider for virtual channels.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.#ctor(Microsoft.Extensions.Logging.ILogger{Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider},Jellyfin.Plugin.VirtualChannels.Services.EpgGenerator,Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider"/> class.
+            </summary>
+            <param name="logger">The logger.</param>
+            <param name="epgGenerator">The EPG generator.</param>
+            <param name="stateManager">The state manager.</param>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.HomePageUrl">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.GetChannelsAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.GetProgramsAsync(System.String,System.DateTime,System.DateTime,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.GetChannelStream(System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.GetChannelStreamMediaSources(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.CloseLiveStream(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.CreateTimerAsync(MediaBrowser.Controller.LiveTv.TimerInfo,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.CancelTimerAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.GetTimersAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.CreateSeriesTimerAsync(MediaBrowser.Controller.LiveTv.SeriesTimerInfo,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.CancelSeriesTimerAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.UpdateSeriesTimerAsync(MediaBrowser.Controller.LiveTv.SeriesTimerInfo,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.UpdateTimerAsync(MediaBrowser.Controller.LiveTv.TimerInfo,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.GetSeriesTimersAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.GetNewTimerDefaultsAsync(System.Threading.CancellationToken,MediaBrowser.Controller.LiveTv.ProgramInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.ResetTuner(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.GetRecordingStreamMediaSources(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.LiveTV.VirtualChannelProvider.DeleteRecordingAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Models.ScheduledSegment">
+            <summary>
+            Represents a scheduled segment in a virtual channel.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ScheduledSegment.Content">
+            <summary>
+            Gets or sets the content item.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ScheduledSegment.Type">
+            <summary>
+            Gets or sets the segment type.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ScheduledSegment.StartOffset">
+            <summary>
+            Gets or sets the start offset in the content.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ScheduledSegment.Duration">
+            <summary>
+            Gets or sets the duration of the segment.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ScheduledSegment.ScheduledStart">
+            <summary>
+            Gets or sets the scheduled start time.
+            </summary>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Models.SegmentType">
+            <summary>
+            Segment type enumeration.
+            </summary>
+        </member>
+        <member name="F:Jellyfin.Plugin.VirtualChannels.Models.SegmentType.Content">
+            <summary>
+            Main content.
+            </summary>
+        </member>
+        <member name="F:Jellyfin.Plugin.VirtualChannels.Models.SegmentType.Commercial">
+            <summary>
+            Commercial break.
+            </summary>
+        </member>
+        <member name="F:Jellyfin.Plugin.VirtualChannels.Models.SegmentType.PreRoll">
+            <summary>
+            Pre-roll content.
+            </summary>
+        </member>
+        <member name="F:Jellyfin.Plugin.VirtualChannels.Models.SegmentType.PostRoll">
+            <summary>
+            Post-roll content.
+            </summary>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Models.ScheduledProgram">
+            <summary>
+            Represents a scheduled program in the EPG.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ScheduledProgram.Id">
+            <summary>
+            Gets or sets the program ID.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ScheduledProgram.Item">
+            <summary>
+            Gets or sets the content item.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ScheduledProgram.StartTime">
+            <summary>
+            Gets or sets the start time.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ScheduledProgram.EndTime">
+            <summary>
+            Gets or sets the end time.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ScheduledProgram.ChannelId">
+            <summary>
+            Gets or sets the channel ID.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ScheduledProgram.Segments">
+            <summary>
+            Gets or sets the segments making up this program.
+            </summary>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Models.ChannelState">
+            <summary>
+            Represents a virtual channel's current state.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ChannelState.ChannelId">
+            <summary>
+            Gets or sets the channel ID.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ChannelState.CurrentProgram">
+            <summary>
+            Gets or sets the current program.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ChannelState.ContentQueue">
+            <summary>
+            Gets or sets the content queue.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ChannelState.LastUpdate">
+            <summary>
+            Gets or sets the last update time.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.ChannelState.IsStreaming">
+            <summary>
+            Gets or sets a value indicating whether the channel is currently streaming.
+            </summary>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Models.CommercialBreak">
+            <summary>
+            Commercial break information.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.CommercialBreak.Position">
+            <summary>
+            Gets or sets the position in the content.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.CommercialBreak.Commercials">
+            <summary>
+            Gets or sets the commercial items.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Models.CommercialBreak.Duration">
+            <summary>
+            Gets or sets the total duration.
+            </summary>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Plugin">
+            <summary>
+            The main plugin class for Virtual Channels.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Plugin.#ctor(MediaBrowser.Common.Configuration.IApplicationPaths,MediaBrowser.Model.Serialization.IXmlSerializer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.VirtualChannels.Plugin"/> class.
+            </summary>
+            <param name="applicationPaths">Instance of the <see cref="T:MediaBrowser.Common.Configuration.IApplicationPaths"/> interface.</param>
+            <param name="xmlSerializer">Instance of the <see cref="T:MediaBrowser.Model.Serialization.IXmlSerializer"/> interface.</param>
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Plugin.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Plugin.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Plugin.Description">
+            <inheritdoc />
+        </member>
+        <member name="P:Jellyfin.Plugin.VirtualChannels.Plugin.Instance">
+            <summary>
+            Gets the current plugin instance.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Plugin.GetPages">
+            <inheritdoc />
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.PluginServiceRegistrator">
+            <summary>
+            Register plugin services.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.PluginServiceRegistrator.RegisterServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,MediaBrowser.Controller.IServerApplicationHost)">
+            <inheritdoc />
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Services.AutoChannelGenerator">
+            <summary>
+            Automatically generates virtual channels based on library content.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.AutoChannelGenerator.#ctor(MediaBrowser.Controller.Library.ILibraryManager,Microsoft.Extensions.Logging.ILogger{Jellyfin.Plugin.VirtualChannels.Services.AutoChannelGenerator})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.VirtualChannels.Services.AutoChannelGenerator"/> class.
+            </summary>
+            <param name="libraryManager">The library manager.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.AutoChannelGenerator.GenerateAutoChannels(System.Threading.CancellationToken)">
+            <summary>
+            Generates channels automatically based on configuration.
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>List of auto-generated channels.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.AutoChannelGenerator.GenerateGenreChannels(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Generates channels based on genres.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.AutoChannelGenerator.GenerateYearChannels(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Generates channels based on release years.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.AutoChannelGenerator.UpdateAutoChannels(System.Threading.CancellationToken)">
+            <summary>
+            Updates auto-generated channels in the configuration.
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler">
+            <summary>
+            Manages scheduling and content queuing for virtual channels.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler.#ctor(MediaBrowser.Controller.Library.ILibraryManager,Microsoft.Extensions.Logging.ILogger{Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler"/> class.
+            </summary>
+            <param name="libraryManager">The library manager.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler.GetNextItemForChannel(System.String,Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig,System.Threading.CancellationToken)">
+            <summary>
+            Gets the next item for a channel.
+            </summary>
+            <param name="channelId">The channel ID.</param>
+            <param name="config">The channel configuration.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>The next item to play.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler.RefillQueue(System.String,Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig,System.Threading.CancellationToken)">
+            <summary>
+            Refills the content queue for a channel.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler.GetChannelContent(Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig,System.Threading.CancellationToken)">
+            <summary>
+            Gets content for a channel based on its configuration.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler.GetCommercials(System.String,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Gets commercial content from the designated folder.
+            </summary>
+            <param name="commercialPath">Path to commercials.</param>
+            <param name="count">Number of commercials to get.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>List of commercial items.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler.ClearQueue(System.String)">
+            <summary>
+            Clears the queue for a channel.
+            </summary>
+            <param name="channelId">The channel ID.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler.GetQueueSize(System.String)">
+            <summary>
+            Gets the current queue size for a channel.
+            </summary>
+            <param name="channelId">The channel ID.</param>
+            <returns>Queue size.</returns>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager">
+            <summary>
+            Manages the state of all virtual channels.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager.#ctor(Microsoft.Extensions.Logging.ILogger{Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager"/> class.
+            </summary>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager.GetOrCreateState(System.String)">
+            <summary>
+            Gets or creates the state for a channel.
+            </summary>
+            <param name="channelId">The channel ID.</param>
+            <returns>The channel state.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager.UpdateCurrentProgram(System.String,Jellyfin.Plugin.VirtualChannels.Models.ScheduledProgram)">
+            <summary>
+            Updates the current program for a channel.
+            </summary>
+            <param name="channelId">The channel ID.</param>
+            <param name="program">The current program.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager.GetCurrentProgram(System.String)">
+            <summary>
+            Gets the current program for a channel.
+            </summary>
+            <param name="channelId">The channel ID.</param>
+            <returns>The current program, or null if none.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager.SetStreamingState(System.String,System.Boolean)">
+            <summary>
+            Sets the streaming state for a channel.
+            </summary>
+            <param name="channelId">The channel ID.</param>
+            <param name="isStreaming">Whether the channel is streaming.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager.IsChannelStreaming(System.String)">
+            <summary>
+            Gets whether a channel is currently streaming.
+            </summary>
+            <param name="channelId">The channel ID.</param>
+            <returns>True if streaming, false otherwise.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager.GetAllStates">
+            <summary>
+            Gets all channel states.
+            </summary>
+            <returns>Dictionary of channel states.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager.ClearState(System.String)">
+            <summary>
+            Clears the state for a channel.
+            </summary>
+            <param name="channelId">The channel ID.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager.ClearAllStates">
+            <summary>
+            Clears all channel states.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager.GetStatistics">
+            <summary>
+            Gets statistics about channel states.
+            </summary>
+            <returns>Statistics dictionary.</returns>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Services.CommercialInserter">
+            <summary>
+            Handles commercial insertion logic for virtual channels.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.CommercialInserter.#ctor(Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler,Microsoft.Extensions.Logging.ILogger{Jellyfin.Plugin.VirtualChannels.Services.CommercialInserter})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.VirtualChannels.Services.CommercialInserter"/> class.
+            </summary>
+            <param name="scheduler">The channel scheduler.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.CommercialInserter.BuildPlaylistWithCommercials(MediaBrowser.Controller.Entities.BaseItem,Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig,System.Threading.CancellationToken)">
+            <summary>
+            Builds a playlist with commercial breaks inserted.
+            </summary>
+            <param name="mainContent">The main content item.</param>
+            <param name="channelConfig">The channel configuration.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>List of scheduled segments.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.CommercialInserter.CalculateMidRollPositions(System.TimeSpan,System.TimeSpan)">
+            <summary>
+            Calculates mid-roll commercial positions.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.CommercialInserter.CalculateTotalDuration(System.Collections.Generic.List{Jellyfin.Plugin.VirtualChannels.Models.ScheduledSegment})">
+            <summary>
+            Calculates the total duration including commercials.
+            </summary>
+            <param name="segments">The segments.</param>
+            <returns>Total duration.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.CommercialInserter.GetSegmentAtOffset(System.Collections.Generic.List{Jellyfin.Plugin.VirtualChannels.Models.ScheduledSegment},System.TimeSpan)">
+            <summary>
+            Gets the segment at a specific time offset.
+            </summary>
+            <param name="segments">The segments.</param>
+            <param name="offset">The time offset.</param>
+            <returns>The segment and relative offset within it.</returns>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Services.EpgGenerator">
+            <summary>
+            Generates Electronic Program Guide (EPG) data in XMLTV format.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.EpgGenerator.#ctor(Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler,Jellyfin.Plugin.VirtualChannels.Services.CommercialInserter,Microsoft.Extensions.Logging.ILogger{Jellyfin.Plugin.VirtualChannels.Services.EpgGenerator})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.VirtualChannels.Services.EpgGenerator"/> class.
+            </summary>
+            <param name="scheduler">The channel scheduler.</param>
+            <param name="commercialInserter">The commercial inserter.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.EpgGenerator.GenerateXmltvGuide(System.Collections.Generic.List{Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig},System.DateTime,System.DateTime,System.Threading.CancellationToken)">
+            <summary>
+            Generates XMLTV format EPG data.
+            </summary>
+            <param name="channels">The channel configurations.</param>
+            <param name="startDate">Start date for EPG.</param>
+            <param name="endDate">End date for EPG.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>XMLTV formatted string.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.EpgGenerator.WriteChannelDefinition(System.Xml.XmlWriter,Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig)">
+            <summary>
+            Writes a channel definition to the XML.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.EpgGenerator.GenerateProgramSchedule(Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig,System.DateTime,System.DateTime,System.Threading.CancellationToken)">
+            <summary>
+            Generates the program schedule for a channel.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.EpgGenerator.WriteProgramEntry(System.Xml.XmlWriter,Jellyfin.Plugin.VirtualChannels.Configuration.VirtualChannelConfig,Jellyfin.Plugin.VirtualChannels.Models.ScheduledProgram)">
+            <summary>
+            Writes a program entry to the XML.
+            </summary>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.Services.StreamGenerator">
+            <summary>
+            Generates HLS streams for virtual channels using FFmpeg.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.StreamGenerator.#ctor(Microsoft.Extensions.Logging.ILogger{Jellyfin.Plugin.VirtualChannels.Services.StreamGenerator})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.VirtualChannels.Services.StreamGenerator"/> class.
+            </summary>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.StreamGenerator.GenerateHlsStream(MediaBrowser.Controller.Entities.BaseItem,System.String,System.TimeSpan,System.Threading.CancellationToken)">
+            <summary>
+            Generates an HLS stream for an item.
+            </summary>
+            <param name="item">The media item.</param>
+            <param name="channelId">The channel ID.</param>
+            <param name="startOffset">Start offset in the video.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Path to the HLS playlist.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.StreamGenerator.BuildFfmpegArgs(System.String,System.String,System.TimeSpan)">
+            <summary>
+            Builds FFmpeg arguments for transcoding.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.StreamGenerator.CleanupOldFiles(System.TimeSpan)">
+            <summary>
+            Cleans up old transcode files.
+            </summary>
+            <param name="olderThan">Delete files older than this timespan.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.Services.StreamGenerator.GetTranscodePath(System.String)">
+            <summary>
+            Gets the transcode path for a channel.
+            </summary>
+            <param name="channelId">The channel ID.</param>
+            <returns>The transcode path.</returns>
+        </member>
+        <member name="T:Jellyfin.Plugin.VirtualChannels.VirtualChannelService">
+            <summary>
+            Background service for managing virtual channels.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.VirtualChannelService.#ctor(Jellyfin.Plugin.VirtualChannels.Services.ChannelScheduler,Jellyfin.Plugin.VirtualChannels.Services.StreamGenerator,Jellyfin.Plugin.VirtualChannels.Services.AutoChannelGenerator,Jellyfin.Plugin.VirtualChannels.Services.ChannelStateManager,Microsoft.Extensions.Logging.ILogger{Jellyfin.Plugin.VirtualChannels.VirtualChannelService})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.VirtualChannels.VirtualChannelService"/> class.
+            </summary>
+            <param name="scheduler">The channel scheduler.</param>
+            <param name="streamGenerator">The stream generator.</param>
+            <param name="autoChannelGenerator">The auto channel generator.</param>
+            <param name="stateManager">The state manager.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.VirtualChannelService.StartAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.VirtualChannelService.DoMaintenance(System.Object)">
+            <summary>
+            Performs maintenance tasks.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.VirtualChannelService.DoAutoChannelUpdate(System.Object)">
+            <summary>
+            Updates auto-generated channels.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.VirtualChannelService.StopAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.VirtualChannels.VirtualChannelService.Dispose">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
